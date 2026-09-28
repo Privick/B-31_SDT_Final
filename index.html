@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One Nation, One Standard — Prototypes</title>
+<style>
+  :root{--navy:#17365D;--navy2:#2A5691;--orange:#E87722;--ink:#1F2B3A;--muted:#74869E;
+        --tintN:#EFF3F9;--tintO:#FDF2E8;--line:#E2E9F2;box-sizing:border-box}
+  *,*::before,*::after{box-sizing:inherit}
+  html,body{height:100%}
+  body{margin:0;background:#F4F6FA;color:var(--ink);
+       font-family:Calibri,Carlito,"Segoe UI",system-ui,sans-serif;font-size:17px;line-height:1.55;
+       display:flex;flex-direction:column}
+  header{background:linear-gradient(135deg,#17365D 0%,#20456F 60%,#2A5691 100%);color:#fff;padding:28px 22px 0}
+  .wrap{max-width:1100px;margin:0 auto}
+  .bar{width:70px;height:5px;background:var(--orange);border-radius:3px;margin-bottom:14px}
+  header .k{font-size:12.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#F0A868}
+  header h1{margin:6px 0 0;font-size:30px;line-height:1.15}
+  header p{margin:8px 0 20px;color:#BFD0E6;font-size:15.5px;max-width:700px}
+
+  nav{background:#0F2745}
+  .tabs{max-width:1100px;margin:0 auto;display:flex;gap:2px;padding:0 22px;overflow-x:auto}
+  .tab{appearance:none;border:none;background:transparent;color:#B9C7DC;font:inherit;font-weight:700;
+       font-size:14.5px;padding:13px 18px;cursor:pointer;border-bottom:3px solid transparent;
+       white-space:nowrap;letter-spacing:.01em}
+  .tab:hover{color:#fff}
+  .tab.active{color:#fff;border-bottom-color:var(--orange);background:rgba(255,255,255,.05)}
+
+  main{flex:1;display:flex;flex-direction:column;min-height:0}
+  .panel{display:none;flex:1;min-height:0;flex-direction:column}
+  .panel.active{display:flex}
+
+  .doc{max-width:1100px;margin:0 auto;padding:26px 22px 60px;width:100%}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:860px){.cards{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 24px;
+        box-shadow:0 3px 14px rgba(23,54,93,.08);display:flex;flex-direction:column}
+  .tag{display:inline-block;background:var(--orange);color:#fff;font-size:13px;font-weight:700;
+       border-radius:16px;padding:3px 12px;letter-spacing:.05em;align-self:flex-start}
+  h2{font-size:22px;color:var(--navy);margin:12px 0 6px}
+  .hmw{background:var(--tintO);border:2px dashed var(--orange);border-radius:10px;
+       padding:11px 14px;font-size:15px;margin:10px 0 14px}
+  ul{margin:6px 0 16px;padding-left:20px}
+  li{margin-bottom:6px;font-size:15.5px}
+  a.btn{display:inline-block;background:var(--orange);color:#fff;text-decoration:none;
+        font-weight:700;border-radius:9px;padding:11px 20px;margin-top:auto;align-self:flex-start;
+        cursor:pointer;border:none;font-family:inherit;font-size:15.5px}
+  .ctx{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:22px}
+  .kick{font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange)}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:10px}
+  @media(max-width:860px){.grid3{grid-template-columns:1fr}}
+  .grid3 h3{color:var(--navy);font-size:16.5px;margin:0 0 4px}
+  .grid3 p{margin:0;font-size:14.5px}
+  footer.page{max-width:1100px;margin:0 auto;padding:0 22px 50px;font-size:13.5px;color:var(--muted)}
+
+  /* Project Story tab */
+  .story h2.sec{font-size:20px;color:var(--navy);margin:30px 0 4px;border-top:1px solid var(--line);padding-top:22px}
+  .story h2.sec:first-child{border-top:none;margin-top:0;padding-top:0}
+  .story .eyebrow{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:2px}
+  .story p{font-size:15.5px;margin:8px 0}
+  .story .quote{background:var(--tintN);border-left:4px solid var(--navy2);border-radius:8px;
+        padding:10px 14px;margin:10px 0;font-size:15px;font-style:italic;color:var(--navy)}
+  .stat-row{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-width:130px}
+  .stat b{display:block;font-size:24px;color:var(--navy)}
+  .stat span{font-size:13px;color:var(--muted)}
+  .loop{background:var(--tintN);border-radius:10px;padding:12px 16px;margin:8px 0;font-size:14.5px}
+  .loop b{color:var(--navy)}
+  .pivot{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:10px 0}
+  @media(max-width:760px){.pivot{grid-template-columns:1fr}}
+  .pivot .box{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .pivot .box h4{margin:0 0 6px;font-size:14.5px;color:var(--navy)}
+  .pivot .box p{margin:0;font-size:14px}
+  .source-note{font-size:13px;color:var(--muted);margin-top:26px;border-top:1px solid var(--line);padding-top:14px}
+
+  iframe.proto{flex:1;width:100%;border:none;min-height:0}
+</style>
+</head>
+<body>
+
+<header><div class="wrap">
+  <div class="bar"></div>
+  <div class="k">Systems Thinking &amp; Human-Centred Design · Final Project · Academic Group 31</div>
+  <h1>One Nation, One Standard</h1>
+  <p>Making a school mark mean the same thing everywhere in India — the project story and both working
+     prototypes, combined in one file.</p>
+</div></header>
+
+<nav><div class="tabs">
+  <button class="tab active" data-tab="overview">Overview</button>
+  <button class="tab" data-tab="story">Project Story</button>
+  <button class="tab" data-tab="drill">Calibration Drill</button>
+  <button class="tab" data-tab="marksheet">Dual Marksheet</button>
+</div></nav>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section class="panel active" id="panel-overview">
+    <div class="doc">
+      <div class="cards">
+        <div class="card">
+          <span class="tag">Prototype 1 · physical / digital</span>
+          <h2>The Calibration Drill</h2>
+          <div class="hmw"><b>HMW 1:</b> How might we make evaluators in every state award marks to the
+          same standard, when generosity is <b>trained, not personal</b>?</div>
+          <ul>
+            <li>Mark a real Class XII script blind, out of 20</li>
+            <li>See the panel's marks, the reasoning, and your drift against a tolerance band</li>
+            <li>Mark a second script and measure whether your drift narrowed</li>
+            <li>Facilitator view aggregates every marker to show the group spread</li>
+          </ul>
+          <button class="btn" data-goto="drill">Open the drill</button>
+        </div>
+        <div class="card">
+          <span class="tag">Prototype 2 · digital</span>
+          <h2>The Dual Marksheet</h2>
+          <div class="hmw"><b>HMW 2:</b> How might we make a mark from any board <b>mean the same thing</b>
+          across India, without asking any state to give up its syllabus or language?</div>
+          <ul>
+            <li>Enter a candidate's board marks and choose the examining board</li>
+            <li>The raw mark is never altered - one percentile column is added</li>
+            <li>A plain-language line explains what the percentile means</li>
+            <li>Switch boards to see the same mark become a different percentile</li>
+          </ul>
+          <button class="btn" data-goto="marksheet">Open the marksheet</button>
+        </div>
+      </div>
+
+      <div class="ctx">
+        <div class="kick">Why these two</div>
+        <div class="grid3">
+          <div><h3>They attack different points</h3>
+            <p>The drill stops the gap from being <b>created</b>. The marksheet stops the existing gap
+            from doing <b>damage</b>. Neither depends on the other.</p></div>
+          <div><h3>They need no new law</h3>
+            <p>Both can start inside a single board, voluntarily. Syllabus, language and brand stay
+            untouched - the one concession our interviews said boards would make.</p></div>
+          <div><h3>They were revised on feedback</h3>
+            <p>The drill became a private mirror and gained a tolerance band; the marksheet gained a
+            plain-language line and subject-wise percentiles.</p></div>
+        </div>
+      </div>
+    </div>
+    <footer class="page">
+      Scripts, panel marks and distribution parameters are illustrative and built for this prototype.
+      A live system would use each board's anonymised distributions supplied to PARAKH, anchored on a
+      common test. Full method and sources are on the Project Story tab.
+    </footer>
+  </section>
+
+  <!-- PROJECT STORY -->
+  <section class="panel" id="panel-story">
+    <div class="doc story">
+
+      <h2 class="sec">The problem</h2>
+      <div class="eyebrow">Same effort, same country — different marks</div>
+      <p>India has 69 school examination boards teaching one shared NCERT textbook, but no common
+        marking standard. A capable student assessed by a stricter-marking board needs a school-leaving
+        score that means the same thing nationally, because a number assigned at seventeen follows him
+        into every selection that matters. The gap is created once, at age 17, then charged again at
+        21 — CUET closes it temporarily at eighteen, but MBA and other shortlists (which weight Class 10
+        and 12 marks at 20–40% of the score) reopen it years later, long after either student could act
+        on it.</p>
+
+      <h2 class="sec">The system</h2>
+      <p>Two reinforcing loops keep the gap regenerating, and a third only hides it:</p>
+      <div class="loop"><b>R1 · Results race</b> — A board is judged publicly on its pass percentage.
+        Generosity lifts that number, the number becomes the benchmark, and every other board feels the
+        same pull. (pressure → generosity → pass % → pressure)</div>
+      <div class="loop"><b>R2 · Trust erosion</b> — Generosity destroys comparability, so selectors trust
+        board marks less. Boards respond by inflating further to protect their own students.
+        (generosity ↑ → comparability ↓ → trust ↓ → generosity ↑)</div>
+      <div class="loop"><b>B1 · Workaround</b> — Entrance exams partly correct the distortion, but treat
+        the symptom: the school mark still carries weight years later.</div>
+      <p><b>Diagnosis:</b> the system is unified everywhere except at the exact point where it is
+        measured — and the people who pay for that have no seat where the norm is set.</p>
+
+      <h2 class="sec">Where we chose to act</h2>
+      <p>Using Meadows' leverage-points framework, we deliberately acted on two mid-depth points rather
+        than the deepest (paradigm — needs consent we can't prototype in a semester) or the shallowest
+        (parameters — where states already act and nothing changes):</p>
+      <div class="pivot">
+        <div class="box"><h4>Leverage 1 · Information flows</h4>
+          <p>Change what a mark tells the reader and every downstream decision changes — without
+          touching a syllabus. → <b>The Dual Marksheet</b></p></div>
+        <div class="box"><h4>Leverage 2 · Goals</h4>
+          <p>Shift a board's goal from "pass our students" to "issue a comparable credential" and R1
+          loses its fuel. → <b>The Calibration Drill</b></p></div>
+      </div>
+
+      <h2 class="sec">What stakeholders told us</h2>
+      <p>Four semi-structured interviews — a professor on a state board council, a principal with 27
+        years across Rajasthan, Kerala and CBSE, and two undergraduate students from different boards
+        with the same CUET band — shaped both prototypes:</p>
+      <div class="quote">"Boards will concede a common standard. They will not concede their identity."
+        — Professor &amp; board member</div>
+      <div class="quote">"It feels like I inherited an advantage I did not earn." — Student, Kerala board</div>
+      <div class="quote">"Judging us on a number from when we were 17 is judging our geography."
+        — Student, Rajasthan board</div>
+      <p>Three things changed our thinking: generosity is a trained norm (a design variable, not a
+        character flaw); even the beneficiary calls it unfair (a legitimacy problem, not a grievance);
+        and resistance is about identity and control — so leave syllabus, language and brand alone.</p>
+
+      <h2 class="sec">From 30 ideas to 2 prototypes</h2>
+      <div class="stat-row">
+        <div class="stat"><b>30</b><span>ideas generated, six techniques</span></div>
+        <div class="stat"><b>20</b><span>placed on the creative matrix</span></div>
+        <div class="stat"><b>12</b><span>judged viable</span></div>
+        <div class="stat"><b>2</b><span>prototyped &amp; tested</span></div>
+      </div>
+      <p>The Calibration Drill and Percentile Layer (Dual Marksheet) scored highest on impact relative
+        to difficulty, and — critically — are independent: if one stalls politically, the other still
+        delivers, and both can start inside a single board with no national agreement needed.</p>
+
+      <h2 class="sec">Evidence from testing</h2>
+      <div class="stat-row">
+        <div class="stat"><b>12</b><span>markers tested (10 peers, 2 teaching staff)</span></div>
+        <div class="stat"><b>11→4</b><span>marks of spread on the same script</span></div>
+        <div class="stat"><b>3.4→1.2</b><span>standard deviation, before → after</span></div>
+      </div>
+      <p><b>What surprised us:</b> markers disagreed on what a partial answer is worth, not on what was
+        right; the drift card mattered more than the model answers; and two markers overcorrected —
+        proving the target has to be a range, never a single number.</p>
+
+      <h2 class="sec">What changed on stakeholder feedback</h2>
+      <div class="pivot">
+        <div class="box"><h4>Calibration Drill</h4>
+          <p>Results are shown to the marker only, never the board — a mirror, not a monitor. The
+          target became a <b>tolerance band</b> instead of one correct number, after markers in testing
+          chased a single figure and overcorrected.</p></div>
+        <div class="box"><h4>Dual Marksheet</h4>
+          <p>A plain-language sentence was added after students asked "percentile of what?", and
+          percentiles are reported <b>subject-wise</b> rather than as one aggregate figure.</p></div>
+      </div>
+      <p><b>Pattern across both:</b> every objection was about control, not accuracy. Nobody argued
+        marking is consistent today — they argued about who would hold the evidence that it isn't.</p>
+
+      <h2 class="sec">Rollout — one board, one subject, one cohort, then extend</h2>
+      <p>Both are designed for voluntary adoption by a single board, needing no legislative change: the
+        Calibration Drill is board-owned from month 3 (build kit with board panel) through month 12
+        (measure drift, extend subjects); the Dual Marksheet runs as a shadow marksheet before going
+        live, using three years of anonymised past results equated against a common anchor supplied to
+        PARAKH. <b>Honest caveat:</b> four interviews cannot represent 69 boards, and our own test used
+        peers, not trained board evaluators — this is a hypothesis to be modelled next in Vensim, not a
+        finished finding.</p>
+
+      <div class="source-note">
+        <b>Sources:</b> NCERT–PARAKH, <i>Establishing Equivalence of School Education Boards</i>, 2024 ·
+        Ministry of Education, <i>National Education Policy 2020</i>, para 4.4.1 · Careers360, Kerala
+        SSLC and RBSE Class 10 Results, 2025 · Collegedunia &amp; Cracku, IIM Shortlisting Criteria
+        2025–26 · D. H. Meadows, <i>Leverage Points: Places to Intervene in a System</i>, 1999. Full
+        reference list and appendices (AEIOU, empathy map, all 30 ideas, creative matrix, scoring method)
+        are in the accompanying project report.
+      </div>
+    </div>
+  </section>
+
+  <!-- CALIBRATION DRILL -->
+  <section class="panel" id="panel-drill">
+    <iframe class="proto" title="Calibration Drill prototype" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Calibration Drill - One Nation, One Standard&lt;/title&gt;
+&lt;style&gt;
+  :root{--navy:#17365D;--navy2:#2A5691;--orange:#E87722;--ink:#1F2B3A;--muted:#74869E;
+        --tintN:#EFF3F9;--tintO:#FDF2E8;--line:#E2E9F2;--ok:#1E7A5A;box-sizing:border-box}
+  *,*::before,*::after{box-sizing:inherit}
+  body{margin:0;background:#F4F6FA;color:var(--ink);
+       font-family:Calibri,Carlito,&quot;Segoe UI&quot;,system-ui,sans-serif;font-size:17px;line-height:1.5}
+  header{background:var(--navy);color:#fff;padding:18px 22px}
+  .wrap{max-width:980px;margin:0 auto}
+  header h1{margin:0;font-size:23px}
+  header p{margin:4px 0 0;color:#BFD0E6;font-size:15px}
+  main{max-width:980px;margin:0 auto;padding:22px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+        margin-bottom:18px;box-shadow:0 2px 10px rgba(23,54,93,.06)}
+  .dash{border:2px dashed var(--orange);background:var(--tintO);border-radius:14px;padding:16px 20px;margin-bottom:18px}
+  .dashN{border:2px dashed var(--navy);background:#fff;border-radius:14px;padding:16px 20px;margin-bottom:18px}
+  h2{font-size:21px;color:var(--navy);margin:0 0 10px}
+  h3{font-size:18px;color:var(--navy);margin:18px 0 6px}
+  .kicker{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:6px}
+  .steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .step{flex:1;min-width:120px;background:#fff;border:1px solid var(--line);border-radius:10px;
+        padding:8px 10px;font-size:14px;color:var(--muted);text-align:center}
+  .step.on{background:var(--navy);color:#fff;border-color:var(--navy);font-weight:700}
+  .step.done{background:var(--tintN);color:var(--navy);border-color:#CBD8E8}
+  .script{background:var(--tintN);border-left:4px solid var(--navy2);border-radius:8px;
+          padding:14px 16px;margin:10px 0;font-size:16px;white-space:pre-wrap}
+  .q{font-weight:700;color:var(--navy)}
+  .markrow{display:flex;align-items:center;gap:14px;margin:10px 0;flex-wrap:wrap}
+  .markrow label{flex:1;min-width:240px;font-size:16px}
+  input[type=number]{width:92px;padding:8px 10px;font-size:17px;font-family:inherit;
+        border:1px solid #C4D0E2;border-radius:8px}
+  input[type=text]{padding:8px 10px;font-size:16px;font-family:inherit;border:1px solid #C4D0E2;border-radius:8px}
+  button{font-family:inherit;font-size:16px;font-weight:700;border:none;border-radius:9px;
+         padding:11px 20px;cursor:pointer;background:var(--orange);color:#fff}
+  button.sec{background:#fff;color:var(--navy);border:1.6px solid var(--navy)}
+  button:disabled{background:#C9D3E2;cursor:not-allowed}
+  .band{position:relative;height:56px;margin:14px 0 6px}
+  .bandline{position:absolute;top:26px;left:0;right:0;height:5px;background:#DCE5F0;border-radius:3px}
+  .bandbox{position:absolute;top:16px;height:25px;background:var(--tintO);border:2px solid var(--orange);border-radius:6px}
+  .dot{position:absolute;top:19px;width:19px;height:19px;border-radius:50%;background:var(--navy);
+       border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25);transform:translateX(-50%)}
+  .scale{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+  table{border-collapse:collapse;width:100%;margin-top:10px}
+  th{background:var(--navy);color:#fff;font-size:15px;text-align:left;padding:8px 10px}
+  td{border-bottom:1px solid var(--line);font-size:16px;padding:8px 10px;vertical-align:top}
+  .big{font-size:34px;font-weight:700;color:var(--orange);line-height:1}
+  .stat{display:flex;gap:16px;flex-wrap:wrap}
+  .stat&gt;div{flex:1;min-width:150px;background:var(--tintN);border-radius:10px;padding:12px 14px}
+  code.out{display:block;background:var(--navy);color:#CFE0F5;padding:12px 14px;border-radius:9px;
+       font-family:Consolas,monospace;font-size:15px;word-break:break-all;margin-top:8px}
+  .hide{display:none}
+  .note{font-size:15px;color:var(--muted)}
+  textarea{width:100%;min-height:110px;font-family:Consolas,monospace;font-size:14px;
+       border:1px solid #C4D0E2;border-radius:9px;padding:10px}
+  .tabs{display:flex;gap:8px;margin-bottom:16px}
+  .tab{padding:9px 16px;border-radius:9px 9px 0 0;background:#E4EAF3;color:var(--navy);
+       cursor:pointer;font-weight:700;font-size:15px}
+  .tab.on{background:var(--navy);color:#fff}
+  .plot{width:100%;height:210px}
+  footer{max-width:980px;margin:0 auto;padding:10px 22px 40px;font-size:14px;color:var(--muted)}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;header&gt;&lt;div class=&quot;wrap&quot;&gt;
+  &lt;h1&gt;The Calibration Drill&lt;/h1&gt;
+  &lt;p&gt;Prototype 1 · One Nation, One Standard · Academic Group 31, SPJIMR&lt;/p&gt;
+&lt;/div&gt;&lt;/header&gt;
+
+&lt;div class=&quot;tabs wrap&quot; style=&quot;padding:16px 22px 0&quot;&gt;
+  &lt;div class=&quot;tab on&quot; id=&quot;tabA&quot; onclick=&quot;showTab(&#x27;marker&#x27;)&quot;&gt;Marker&lt;/div&gt;
+  &lt;div class=&quot;tab&quot; id=&quot;tabB&quot; onclick=&quot;showTab(&#x27;fac&#x27;)&quot;&gt;Facilitator&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;main&gt;
+&lt;!-- ================= MARKER ================= --&gt;
+&lt;div id=&quot;marker&quot;&gt;
+  &lt;div class=&quot;steps&quot;&gt;
+    &lt;div class=&quot;step on&quot; id=&quot;s1&quot;&gt;1 · Brief&lt;/div&gt;
+    &lt;div class=&quot;step&quot; id=&quot;s2&quot;&gt;2 · Mark blind&lt;/div&gt;
+    &lt;div class=&quot;step&quot; id=&quot;s3&quot;&gt;3 · Drift card&lt;/div&gt;
+    &lt;div class=&quot;step&quot; id=&quot;s4&quot;&gt;4 · Mark again&lt;/div&gt;
+    &lt;div class=&quot;step&quot; id=&quot;s5&quot;&gt;5 · Your result&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- STEP 1 --&gt;
+  &lt;section id=&quot;p1&quot; class=&quot;card&quot;&gt;
+    &lt;div class=&quot;kicker&quot;&gt;Step 1 · Brief&lt;/div&gt;
+    &lt;h2&gt;You are about to mark the same script as everyone else&lt;/h2&gt;
+    &lt;p&gt;You will mark one Class XII Economics script with &lt;b&gt;no guidance&lt;/b&gt;. Then you will see
+    how a central panel marked it and where you sat against the acceptable band. Then you will
+    mark a second script of similar difficulty.&lt;/p&gt;
+    &lt;div class=&quot;dash&quot;&gt;
+      &lt;b&gt;The rule of the drill:&lt;/b&gt; your marks are shown to you only. Nothing about you as an
+      individual is reported to the board. This is a &lt;b&gt;mirror, not a monitor&lt;/b&gt;.
+    &lt;/div&gt;
+    &lt;div class=&quot;markrow&quot;&gt;
+      &lt;label for=&quot;mid&quot;&gt;Marker code (anything - &quot;M1&quot;, your initials)&lt;/label&gt;
+      &lt;input type=&quot;text&quot; id=&quot;mid&quot; value=&quot;M1&quot; maxlength=&quot;12&quot;&gt;
+    &lt;/div&gt;
+    &lt;button onclick=&quot;go(2)&quot;&gt;Start Round 1&lt;/button&gt;
+  &lt;/section&gt;
+
+  &lt;!-- STEP 2 --&gt;
+  &lt;section id=&quot;p2&quot; class=&quot;card hide&quot;&gt;
+    &lt;div class=&quot;kicker&quot;&gt;Step 2 · Round 1, blind&lt;/div&gt;
+    &lt;h2&gt;Script A — mark out of 20&lt;/h2&gt;
+    &lt;p class=&quot;note&quot;&gt;Award whole or half marks. Do not look anything up. Trust your judgement.&lt;/p&gt;
+    &lt;div id=&quot;scriptA&quot;&gt;&lt;/div&gt;
+    &lt;div id=&quot;inputsA&quot;&gt;&lt;/div&gt;
+    &lt;p&gt;&lt;b&gt;Your total: &lt;span id=&quot;totA&quot;&gt;0&lt;/span&gt; / 20&lt;/b&gt;&lt;/p&gt;
+    &lt;button onclick=&quot;submitA()&quot;&gt;Submit Round 1&lt;/button&gt;
+  &lt;/section&gt;
+
+  &lt;!-- STEP 3 --&gt;
+  &lt;section id=&quot;p3&quot; class=&quot;card hide&quot;&gt;
+    &lt;div class=&quot;kicker&quot;&gt;Step 3 · Drift card&lt;/div&gt;
+    &lt;h2&gt;Where you sat against the panel&lt;/h2&gt;
+    &lt;div class=&quot;band&quot;&gt;
+      &lt;div class=&quot;bandline&quot;&gt;&lt;/div&gt;
+      &lt;div class=&quot;bandbox&quot; id=&quot;boxA&quot;&gt;&lt;/div&gt;
+      &lt;div class=&quot;dot&quot; id=&quot;dotA&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;scale&quot;&gt;&lt;span&gt;0&lt;/span&gt;&lt;span&gt;5&lt;/span&gt;&lt;span&gt;10&lt;/span&gt;&lt;span&gt;15&lt;/span&gt;&lt;span&gt;20&lt;/span&gt;&lt;/div&gt;
+    &lt;p id=&quot;verdictA&quot; style=&quot;font-size:19px&quot;&gt;&lt;/p&gt;
+    &lt;h3&gt;How the panel marked it, and why&lt;/h3&gt;
+    &lt;table id=&quot;tableA&quot;&gt;&lt;/table&gt;
+    &lt;p style=&quot;margin-top:16px&quot;&gt;&lt;button onclick=&quot;go(4)&quot;&gt;Mark Script B with this in mind&lt;/button&gt;&lt;/p&gt;
+  &lt;/section&gt;
+
+  &lt;!-- STEP 4 --&gt;
+  &lt;section id=&quot;p4&quot; class=&quot;card hide&quot;&gt;
+    &lt;div class=&quot;kicker&quot;&gt;Step 4 · Round 2, after the kit&lt;/div&gt;
+    &lt;h2&gt;Script B — mark out of 20&lt;/h2&gt;
+    &lt;p class=&quot;note&quot;&gt;Apply the same principles the panel used on Script A.&lt;/p&gt;
+    &lt;div id=&quot;scriptB&quot;&gt;&lt;/div&gt;
+    &lt;div id=&quot;inputsB&quot;&gt;&lt;/div&gt;
+    &lt;p&gt;&lt;b&gt;Your total: &lt;span id=&quot;totB&quot;&gt;0&lt;/span&gt; / 20&lt;/b&gt;&lt;/p&gt;
+    &lt;button onclick=&quot;submitB()&quot;&gt;Submit Round 2&lt;/button&gt;
+  &lt;/section&gt;
+
+  &lt;!-- STEP 5 --&gt;
+  &lt;section id=&quot;p5&quot; class=&quot;card hide&quot;&gt;
+    &lt;div class=&quot;kicker&quot;&gt;Step 5 · Your result&lt;/div&gt;
+    &lt;h2&gt;Your drift, before and after&lt;/h2&gt;
+    &lt;div class=&quot;stat&quot;&gt;
+      &lt;div&gt;&lt;div class=&quot;big&quot; id=&quot;d1&quot;&gt;-&lt;/div&gt;&lt;div&gt;marks from the panel, Round 1&lt;/div&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;div class=&quot;big&quot; id=&quot;d2&quot;&gt;-&lt;/div&gt;&lt;div&gt;marks from the panel, Round 2&lt;/div&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;div class=&quot;big&quot; id=&quot;d3&quot;&gt;-&lt;/div&gt;&lt;div&gt;change&lt;/div&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;band&quot; style=&quot;margin-top:22px&quot;&gt;
+      &lt;div class=&quot;bandline&quot;&gt;&lt;/div&gt;
+      &lt;div class=&quot;bandbox&quot; id=&quot;boxB&quot;&gt;&lt;/div&gt;
+      &lt;div class=&quot;dot&quot; id=&quot;dotB&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;scale&quot;&gt;&lt;span&gt;0&lt;/span&gt;&lt;span&gt;5&lt;/span&gt;&lt;span&gt;10&lt;/span&gt;&lt;span&gt;15&lt;/span&gt;&lt;span&gt;20&lt;/span&gt;&lt;/div&gt;
+    &lt;p id=&quot;verdictB&quot; style=&quot;font-size:19px&quot;&gt;&lt;/p&gt;
+    &lt;div class=&quot;dashN&quot;&gt;
+      &lt;b&gt;Hand this code to the facilitator&lt;/b&gt; so the group spread can be calculated.
+      Nothing else leaves this page.
+      &lt;code class=&quot;out&quot; id=&quot;code&quot;&gt;&lt;/code&gt;
+      &lt;button class=&quot;sec&quot; style=&quot;margin-top:10px&quot; onclick=&quot;copyCode()&quot;&gt;Copy code&lt;/button&gt;
+      &lt;button class=&quot;sec&quot; style=&quot;margin-top:10px&quot; onclick=&quot;location.reload()&quot;&gt;Start again&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+&lt;/div&gt;
+
+&lt;!-- ================= FACILITATOR ================= --&gt;
+&lt;div id=&quot;fac&quot; class=&quot;hide&quot;&gt;
+  &lt;section class=&quot;card&quot;&gt;
+    &lt;div class=&quot;kicker&quot;&gt;Facilitator view&lt;/div&gt;
+    &lt;h2&gt;Paste every marker&#x27;s code, one per line&lt;/h2&gt;
+    &lt;p class=&quot;note&quot;&gt;This calculates the spread of marks on the identical script, before and after
+    the kit — the measure the prototype exists to move.&lt;/p&gt;
+    &lt;textarea id=&quot;codes&quot; placeholder=&quot;M1|13.5|15
+M2|10|14.5
+M3|16|15.5&quot;&gt;&lt;/textarea&gt;
+    &lt;p&gt;&lt;button onclick=&quot;analyse()&quot;&gt;Calculate spread&lt;/button&gt;
+       &lt;button class=&quot;sec&quot; onclick=&quot;demo()&quot;&gt;Load sample data&lt;/button&gt;&lt;/p&gt;
+    &lt;div id=&quot;results&quot; class=&quot;hide&quot;&gt;
+      &lt;div class=&quot;stat&quot; style=&quot;margin-top:14px&quot;&gt;
+        &lt;div&gt;&lt;div class=&quot;big&quot; id=&quot;rN&quot;&gt;-&lt;/div&gt;&lt;div&gt;markers&lt;/div&gt;&lt;/div&gt;
+        &lt;div&gt;&lt;div class=&quot;big&quot; id=&quot;rRange&quot;&gt;-&lt;/div&gt;&lt;div&gt;range, Round 1 → Round 2&lt;/div&gt;&lt;/div&gt;
+        &lt;div&gt;&lt;div class=&quot;big&quot; id=&quot;rSD&quot;&gt;-&lt;/div&gt;&lt;div&gt;standard deviation, R1 → R2&lt;/div&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;h3&gt;Distribution of marks awarded on the same script&lt;/h3&gt;
+      &lt;svg class=&quot;plot&quot; id=&quot;plot&quot; viewBox=&quot;0 0 760 210&quot;&gt;&lt;/svg&gt;
+      &lt;p class=&quot;note&quot;&gt;Panel marks: Script A = 13 (band 12-14), Script B = 15 (band 14-16).&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+&lt;/div&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;
+  Built by Academic Group 31 as the tested prototype for HMW 1: &quot;How might we make evaluators in
+  every state award marks to the same standard, when generosity is trained, not personal?&quot;
+  Scripts and panel marks are illustrative and written for this drill.
+&lt;/footer&gt;
+
+&lt;script&gt;
+const SCRIPTS = {
+ A:{ panel:13, lo:12, hi:14, items:[
+   {q:&quot;Q1 (6 marks). State and explain two factors, other than its own price, that affect the demand for a commodity.&quot;,
+    ans:&quot;Demand of a good depends on income of the consumer. If income increases then demand increases because people can buy more. It also depends on price of related goods. If the price of tea goes up the demand for coffee also goes up because people shift. Coffee and tea are complementary goods.&quot;,
+    max:6, panel:4,
+    why:&quot;Both factors are correctly named and income is explained (2). The related-goods effect is described correctly (1), but tea and coffee are labelled complementary when they are substitutes - a definitional error, so the second mark for that factor is withheld (1 of 2). No mark lost for absence of a diagram, which the question does not require.&quot;},
+   {q:&quot;Q2 (8 marks). Explain how an increase in the repo rate by the central bank affects aggregate demand.&quot;,
+    ans:&quot;Repo rate is the rate at which RBI lends to commercial banks. If RBI increases repo rate, borrowing becomes costly for banks. So banks also increase their lending rates. Because loans are costlier, people take fewer loans for houses and cars and firms invest less. So consumption and investment both fall and aggregate demand falls.&quot;,
+    max:8, panel:6,
+    why:&quot;The transmission chain is complete and correctly ordered: repo up, bank borrowing costlier, lending rates up, credit demand down, C and I down, AD down (6). Two marks withheld because the answer never mentions the contraction of credit creation or money supply, which the marking scheme treats as a required step rather than an optional flourish.&quot;},
+   {q:&quot;Q3 (6 marks). Distinguish between microeconomics and macroeconomics, with one example of each.&quot;,
+    ans:&quot;Microeconomics studies individual units like a consumer or a firm. Macroeconomics studies the economy as a whole. Example of microeconomics is how a firm decides the price of its product. Example of macroeconomics is how one industry grows.&quot;,
+    max:6, panel:3,
+    why:&quot;Both definitions are accurate (3 of 4 - the distinction is stated but not developed). The micro example is correct (1). The macro example is wrong: the growth of a single industry is a micro-level question, so that mark is not awarded (0 of 1).&quot;}]},
+ B:{ panel:15, lo:14, hi:16, items:[
+   {q:&quot;Q1 (6 marks). Explain the law of supply and state one exception to it.&quot;,
+    ans:&quot;Law of supply says that other things being equal, when the price of a good rises the quantity supplied also rises, and when price falls quantity supplied falls. This is because producers want more profit at higher prices. An exception is labour supply, where after a point a worker may work less even if wages rise because he prefers leisure.&quot;,
+    max:6, panel:5,
+    why:&quot;Statement of the law with the ceteris paribus condition (2), reason given (1), and a genuine, correctly explained exception (2). One mark withheld because the answer does not mention the direct relationship being shown by an upward sloping supply curve, which the scheme lists as a required element.&quot;},
+   {q:&quot;Q2 (8 marks). A government increases its expenditure on infrastructure. Explain the effect on national income.&quot;,
+    ans:&quot;When government spends more on infrastructure, it creates employment and people get income. These people spend that income on goods, so other producers also earn. This process continues again and again. So national income increases by more than the initial spending. This is called the multiplier effect.&quot;,
+    max:8, panel:7,
+    why:&quot;The successive-rounds mechanism is explained correctly and the multiplier is named (6). A further mark is given for recognising that the increase exceeds the initial injection (1). One mark withheld: the answer does not link the size of the effect to the marginal propensity to consume.&quot;},
+   {q:&quot;Q3 (6 marks). Define opportunity cost and give one example from a household decision.&quot;,
+    ans:&quot;Opportunity cost is the cost of the next best alternative that is given up when we make a choice. For example if a family uses its savings to buy a car, the opportunity cost is the interest it would have earned by keeping the money in the bank.&quot;,
+    max:6, panel:3,
+    why:&quot;Definition is precise and correctly refers to the next best alternative forgone (2). The example is valid and clearly explained (1). Three marks withheld because the question carries 6 marks and the scheme requires the concept to be linked to scarcity and choice, which the answer never does.&quot;}]}
+};
+
+let state={mid:&quot;M1&quot;,A:null,B:null};
+
+function showTab(t){
+  document.getElementById(&quot;marker&quot;).classList.toggle(&quot;hide&quot;,t!==&quot;marker&quot;);
+  document.getElementById(&quot;fac&quot;).classList.toggle(&quot;hide&quot;,t!==&quot;fac&quot;);
+  document.getElementById(&quot;tabA&quot;).classList.toggle(&quot;on&quot;,t===&quot;marker&quot;);
+  document.getElementById(&quot;tabB&quot;).classList.toggle(&quot;on&quot;,t===&quot;fac&quot;);
+}
+function go(n){
+  for(let i=1;i&lt;=5;i++){
+    document.getElementById(&quot;p&quot;+i).classList.toggle(&quot;hide&quot;,i!==n);
+    const st=document.getElementById(&quot;s&quot;+i);
+    st.classList.toggle(&quot;on&quot;,i===n);
+    st.classList.toggle(&quot;done&quot;,i&lt;n);
+  }
+  window.scrollTo({top:0,behavior:&quot;smooth&quot;});
+}
+function renderScript(key,holder,inputs,totId){
+  const S=SCRIPTS[key];
+  document.getElementById(holder).innerHTML = S.items.map((it,i)=&gt;
+    `&lt;p class=&quot;q&quot;&gt;${it.q}&lt;/p&gt;&lt;div class=&quot;script&quot;&gt;${it.ans}&lt;/div&gt;`).join(&quot;&quot;);
+  document.getElementById(inputs).innerHTML = S.items.map((it,i)=&gt;
+    `&lt;div class=&quot;markrow&quot;&gt;&lt;label&gt;Marks for Q${i+1} (out of ${it.max})&lt;/label&gt;
+     &lt;input type=&quot;number&quot; min=&quot;0&quot; max=&quot;${it.max}&quot; step=&quot;0.5&quot; value=&quot;&quot; id=&quot;${key}${i}&quot;
+      oninput=&quot;tot(&#x27;${key}&#x27;,&#x27;${totId}&#x27;)&quot;&gt;&lt;/div&gt;`).join(&quot;&quot;);
+}
+function tot(key,totId){
+  const S=SCRIPTS[key]; let t=0;
+  S.items.forEach((it,i)=&gt;{const v=parseFloat(document.getElementById(key+i).value); if(!isNaN(v)) t+=v;});
+  document.getElementById(totId).textContent=(Math.round(t*2)/2);
+  return t;
+}
+function band(boxId,dotId,S,mark){
+  const box=document.getElementById(boxId), dot=document.getElementById(dotId);
+  box.style.left=(S.lo/20*100)+&quot;%&quot;; box.style.width=((S.hi-S.lo)/20*100)+&quot;%&quot;;
+  dot.style.left=(Math.max(0,Math.min(20,mark))/20*100)+&quot;%&quot;;
+}
+function submitA(){
+  const t=tot(&quot;A&quot;,&quot;totA&quot;);
+  if(SCRIPTS.A.items.some((it,i)=&gt;document.getElementById(&quot;A&quot;+i).value===&quot;&quot;))
+    {alert(&quot;Please enter a mark for every question.&quot;);return;}
+  state.mid=document.getElementById(&quot;mid&quot;).value.trim()||&quot;M1&quot;;
+  state.A=Math.round(t*2)/2;
+  const S=SCRIPTS.A;
+  band(&quot;boxA&quot;,&quot;dotA&quot;,S,state.A);
+  const d=state.A-S.panel;
+  const inBand = state.A&gt;=S.lo &amp;&amp; state.A&lt;=S.hi;
+  document.getElementById(&quot;verdictA&quot;).innerHTML = inBand
+    ? `You awarded &lt;b&gt;${state.A}&lt;/b&gt;. The panel awarded &lt;b&gt;${S.panel}&lt;/b&gt; with an acceptable band of
+       &lt;b&gt;${S.lo}-${S.hi}&lt;/b&gt;. &lt;span style=&quot;color:var(--ok);font-weight:700&quot;&gt;You are inside the band.&lt;/span&gt;`
+    : `You awarded &lt;b&gt;${state.A}&lt;/b&gt;. The panel awarded &lt;b&gt;${S.panel}&lt;/b&gt; with an acceptable band of
+       &lt;b&gt;${S.lo}-${S.hi}&lt;/b&gt;. &lt;span style=&quot;color:var(--orange);font-weight:700&quot;&gt;You are
+       ${Math.abs(d).toFixed(1)} marks ${d&lt;0?&quot;below&quot;:&quot;above&quot;} the band&#x27;s ${d&lt;0?&quot;floor&quot;:&quot;ceiling&quot;}.&lt;/span&gt;`;
+  document.getElementById(&quot;tableA&quot;).innerHTML =
+    &quot;&lt;tr&gt;&lt;th&gt;Question&lt;/th&gt;&lt;th&gt;You&lt;/th&gt;&lt;th&gt;Panel&lt;/th&gt;&lt;th&gt;Why the panel marked it this way&lt;/th&gt;&lt;/tr&gt;&quot;+
+    S.items.map((it,i)=&gt;{
+      const yv=document.getElementById(&quot;A&quot;+i).value;
+      return `&lt;tr&gt;&lt;td&gt;&lt;b&gt;Q${i+1}&lt;/b&gt; (${it.max})&lt;/td&gt;&lt;td&gt;${yv}&lt;/td&gt;&lt;td&gt;&lt;b&gt;${it.panel}&lt;/b&gt;&lt;/td&gt;&lt;td&gt;${it.why}&lt;/td&gt;&lt;/tr&gt;`;
+    }).join(&quot;&quot;);
+  go(3);
+}
+function submitB(){
+  const t=tot(&quot;B&quot;,&quot;totB&quot;);
+  if(SCRIPTS.B.items.some((it,i)=&gt;document.getElementById(&quot;B&quot;+i).value===&quot;&quot;))
+    {alert(&quot;Please enter a mark for every question.&quot;);return;}
+  state.B=Math.round(t*2)/2;
+  const S=SCRIPTS.B;
+  band(&quot;boxB&quot;,&quot;dotB&quot;,S,state.B);
+  const dA=Math.abs(state.A-SCRIPTS.A.panel), dB=Math.abs(state.B-S.panel);
+  document.getElementById(&quot;d1&quot;).textContent=dA.toFixed(1);
+  document.getElementById(&quot;d2&quot;).textContent=dB.toFixed(1);
+  const ch=dB-dA;
+  document.getElementById(&quot;d3&quot;).textContent=(ch&gt;0?&quot;+&quot;:&quot;&quot;)+ch.toFixed(1);
+  const inBand = state.B&gt;=S.lo &amp;&amp; state.B&lt;=S.hi;
+  document.getElementById(&quot;verdictB&quot;).innerHTML = inBand
+    ? `You awarded &lt;b&gt;${state.B}&lt;/b&gt;; the panel awarded &lt;b&gt;${S.panel}&lt;/b&gt; (band ${S.lo}-${S.hi}).
+       &lt;span style=&quot;color:var(--ok);font-weight:700&quot;&gt;Inside the band.&lt;/span&gt;`
+    : `You awarded &lt;b&gt;${state.B}&lt;/b&gt;; the panel awarded &lt;b&gt;${S.panel}&lt;/b&gt; (band ${S.lo}-${S.hi}).
+       &lt;span style=&quot;color:var(--orange);font-weight:700&quot;&gt;Outside the band.&lt;/span&gt;`;
+  document.getElementById(&quot;code&quot;).textContent=`${state.mid}|${state.A}|${state.B}`;
+  try{localStorage.setItem(&quot;cd_&quot;+state.mid,`${state.A}|${state.B}`);}catch(e){}
+  go(5);
+}
+function copyCode(){
+  const t=document.getElementById(&quot;code&quot;).textContent;
+  navigator.clipboard.writeText(t).then(()=&gt;alert(&quot;Copied: &quot;+t),()=&gt;alert(&quot;Copy this: &quot;+t));
+}
+function demo(){
+  document.getElementById(&quot;codes&quot;).value=
+`M1|11|14.5
+M2|16|15.5
+M3|9.5|14
+M4|14|15
+M5|17|16
+M6|12.5|15.5
+M7|10|14
+M8|15.5|15
+M9|13|16
+M10|18|15.5
+M11|11.5|14.5
+M12|14.5|15`;
+}
+function stats(a){
+  const n=a.length, m=a.reduce((x,y)=&gt;x+y,0)/n;
+  const sd=Math.sqrt(a.reduce((s,x)=&gt;s+(x-m)*(x-m),0)/(n-1||1));
+  return {n,m,sd,min:Math.min(...a),max:Math.max(...a)};
+}
+function analyse(){
+  const rows=document.getElementById(&quot;codes&quot;).value.trim().split(/\n+/)
+    .map(l=&gt;l.split(&quot;|&quot;)).filter(p=&gt;p.length&gt;=3 &amp;&amp; !isNaN(parseFloat(p[1])) &amp;&amp; !isNaN(parseFloat(p[2])));
+  if(rows.length&lt;2){alert(&quot;Please paste at least two marker codes.&quot;);return;}
+  const r1=rows.map(p=&gt;parseFloat(p[1])), r2=rows.map(p=&gt;parseFloat(p[2]));
+  const s1=stats(r1), s2=stats(r2);
+  document.getElementById(&quot;rN&quot;).textContent=rows.length;
+  document.getElementById(&quot;rRange&quot;).textContent=(s1.max-s1.min).toFixed(1)+&quot; → &quot;+(s2.max-s2.min).toFixed(1);
+  document.getElementById(&quot;rSD&quot;).textContent=s1.sd.toFixed(1)+&quot; → &quot;+s2.sd.toFixed(1);
+  document.getElementById(&quot;results&quot;).classList.remove(&quot;hide&quot;);
+  drawPlot(r1,r2);
+}
+function drawPlot(r1,r2){
+  const X=x=&gt;60+(x/20)*660;
+  let g=&#x27;&lt;line x1=&quot;60&quot; y1=&quot;170&quot; x2=&quot;720&quot; y2=&quot;170&quot; stroke=&quot;#C9D5E6&quot; stroke-width=&quot;2&quot;/&gt;&#x27;;
+  for(let m=0;m&lt;=20;m+=5){
+    g+=`&lt;line x1=&quot;${X(m)}&quot; y1=&quot;166&quot; x2=&quot;${X(m)}&quot; y2=&quot;174&quot; stroke=&quot;#C9D5E6&quot; stroke-width=&quot;2&quot;/&gt;`;
+    g+=`&lt;text x=&quot;${X(m)}&quot; y=&quot;194&quot; font-size=&quot;14&quot; fill=&quot;#74869E&quot; text-anchor=&quot;middle&quot;&gt;${m}&lt;/text&gt;`;
+  }
+  g+=`&lt;rect x=&quot;${X(12)}&quot; y=&quot;44&quot; width=&quot;${X(14)-X(12)}&quot; height=&quot;34&quot; fill=&quot;#FDF2E8&quot; stroke=&quot;#E87722&quot; stroke-dasharray=&quot;5 4&quot;/&gt;`;
+  g+=`&lt;rect x=&quot;${X(14)}&quot; y=&quot;108&quot; width=&quot;${X(16)-X(14)}&quot; height=&quot;34&quot; fill=&quot;#FDF2E8&quot; stroke=&quot;#E87722&quot; stroke-dasharray=&quot;5 4&quot;/&gt;`;
+  g+=`&lt;text x=&quot;10&quot; y=&quot;66&quot; font-size=&quot;14&quot; fill=&quot;#1F2B3A&quot;&gt;Round 1&lt;/text&gt;`;
+  g+=`&lt;text x=&quot;10&quot; y=&quot;130&quot; font-size=&quot;14&quot; fill=&quot;#E87722&quot;&gt;Round 2&lt;/text&gt;`;
+  const jitter=(arr,y,col)=&gt;{const seen={};return arr.map(v=&gt;{seen[v]=(seen[v]||0)+1;
+    return `&lt;circle cx=&quot;${X(v)}&quot; cy=&quot;${y+(seen[v]-1)*11}&quot; r=&quot;6.5&quot; fill=&quot;${col}&quot; fill-opacity=&quot;.85&quot;/&gt;`;}).join(&quot;&quot;);};
+  g+=jitter(r1,56,&quot;#17365D&quot;);
+  g+=jitter(r2,120,&quot;#E87722&quot;);
+  document.getElementById(&quot;plot&quot;).innerHTML=g;
+}
+renderScript(&quot;A&quot;,&quot;scriptA&quot;,&quot;inputsA&quot;,&quot;totA&quot;);
+renderScript(&quot;B&quot;,&quot;scriptB&quot;,&quot;inputsB&quot;,&quot;totB&quot;);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+  </section>
+
+  <!-- DUAL MARKSHEET -->
+  <section class="panel" id="panel-marksheet">
+    <iframe class="proto" title="Dual Marksheet prototype" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Dual Marksheet - One Nation, One Standard&lt;/title&gt;
+&lt;style&gt;
+  :root{--navy:#17365D;--navy2:#2A5691;--orange:#E87722;--ink:#1F2B3A;--muted:#74869E;
+        --tintN:#EFF3F9;--tintO:#FDF2E8;--line:#E2E9F2;box-sizing:border-box}
+  *,*::before,*::after{box-sizing:inherit}
+  body{margin:0;background:#F4F6FA;color:var(--ink);
+       font-family:Calibri,Carlito,&quot;Segoe UI&quot;,system-ui,sans-serif;font-size:17px;line-height:1.5}
+  header{background:var(--navy);color:#fff;padding:18px 22px}
+  header h1{margin:0;font-size:23px}
+  header p{margin:4px 0 0;color:#BFD0E6;font-size:15px}
+  .wrap{max-width:1120px;margin:0 auto}
+  main{max-width:1120px;margin:0 auto;padding:22px;display:grid;
+       grid-template-columns:400px 1fr;gap:22px;align-items:start}
+  @media(max-width:900px){main{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;
+        box-shadow:0 2px 10px rgba(23,54,93,.06)}
+  h2{font-size:20px;color:var(--navy);margin:0 0 10px}
+  .kicker{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+          color:var(--orange);margin-bottom:6px}
+  label{display:block;font-size:15px;color:var(--muted);margin:12px 0 4px}
+  select,input{width:100%;padding:9px 11px;font-size:16px;font-family:inherit;
+       border:1px solid #C4D0E2;border-radius:8px;background:#fff}
+  .row{display:grid;grid-template-columns:1fr 92px;gap:10px;align-items:end}
+  button{font-family:inherit;font-size:16px;font-weight:700;border:none;border-radius:9px;
+         padding:11px 18px;cursor:pointer;background:var(--orange);color:#fff;margin-top:16px}
+  button.sec{background:#fff;color:var(--navy);border:1.6px solid var(--navy);margin-left:8px}
+  /* marksheet */
+  .sheet{background:#fff;border:2px solid var(--navy);border-radius:14px;overflow:hidden}
+  .sheet .top{background:var(--navy);color:#fff;padding:14px 20px}
+  .sheet .top h3{margin:0;font-size:19px;letter-spacing:.4px}
+  .sheet .top p{margin:3px 0 0;font-size:14px;color:#BFD0E6}
+  .sheet .body{padding:18px 20px}
+  .meta{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px}
+  .meta .lbl{font-size:13px;color:var(--muted)}
+  .meta .val{font-size:18px;font-weight:700}
+  .qr{width:54px;height:54px;border:1px solid var(--navy);background:var(--tintN);
+      display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:3px;padding:6px}
+  .qr i{background:var(--navy);display:block}
+  .qr i.o{background:transparent}
+  table{border-collapse:collapse;width:100%}
+  th{font-size:14px;text-align:left;padding:8px 10px;color:var(--navy);background:var(--tintN)}
+  th.pc{background:var(--tintO);color:var(--orange)}
+  td{border-bottom:1px solid var(--line);padding:9px 10px;font-size:16px}
+  td.pc{font-weight:700;color:var(--orange);font-size:18px}
+  .explain{margin-top:14px;border:2px dashed var(--orange);background:var(--tintO);
+           border-radius:10px;padding:12px 14px;font-size:15px}
+  .cmp{margin-top:18px}
+  .bar{height:26px;background:var(--tintN);border-radius:6px;position:relative;overflow:hidden}
+  .bar span{position:absolute;left:0;top:0;bottom:0;background:var(--orange);border-radius:6px}
+  .cmprow{display:grid;grid-template-columns:150px 1fr 62px;gap:10px;align-items:center;margin:8px 0}
+  .note{font-size:14px;color:var(--muted);margin-top:10px}
+  footer{max-width:1120px;margin:0 auto;padding:6px 22px 40px;font-size:14px;color:var(--muted)}
+  @media print{header,footer,.left,button{display:none}main{display:block;padding:0}}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;header&gt;&lt;div class=&quot;wrap&quot;&gt;
+  &lt;h1&gt;The Dual Marksheet&lt;/h1&gt;
+  &lt;p&gt;Prototype 2 · One Nation, One Standard · Academic Group 31, SPJIMR&lt;/p&gt;
+&lt;/div&gt;&lt;/header&gt;
+
+&lt;main&gt;
+  &lt;section class=&quot;card left&quot;&gt;
+    &lt;div class=&quot;kicker&quot;&gt;Inputs&lt;/div&gt;
+    &lt;h2&gt;Issue a marksheet&lt;/h2&gt;
+    &lt;label for=&quot;name&quot;&gt;Candidate name&lt;/label&gt;
+    &lt;input id=&quot;name&quot; value=&quot;Y. Rathore&quot;&gt;
+    &lt;label for=&quot;board&quot;&gt;Board that examined the candidate&lt;/label&gt;
+    &lt;select id=&quot;board&quot; onchange=&quot;render()&quot;&gt;
+      &lt;option value=&quot;RBSE&quot;&gt;Rajasthan Board (RBSE)&lt;/option&gt;
+      &lt;option value=&quot;KER&quot;&gt;Kerala Board (SSLC / HSE)&lt;/option&gt;
+      &lt;option value=&quot;CBSE&quot;&gt;Central Board (CBSE)&lt;/option&gt;
+      &lt;option value=&quot;MSBSHSE&quot;&gt;Maharashtra Board (HSC)&lt;/option&gt;
+    &lt;/select&gt;
+    &lt;div id=&quot;rows&quot;&gt;&lt;/div&gt;
+    &lt;button onclick=&quot;render()&quot;&gt;Generate marksheet&lt;/button&gt;
+    &lt;button class=&quot;sec&quot; onclick=&quot;window.print()&quot;&gt;Print&lt;/button&gt;
+    &lt;p class=&quot;note&quot; id=&quot;swap&quot;&gt;&lt;/p&gt;
+  &lt;/section&gt;
+
+  &lt;section&gt;
+    &lt;div class=&quot;sheet&quot; id=&quot;sheet&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;card cmp&quot; style=&quot;margin-top:20px&quot;&gt;
+      &lt;div class=&quot;kicker&quot;&gt;The point of the second column&lt;/div&gt;
+      &lt;h2&gt;The same raw marks, read under four different boards&lt;/h2&gt;
+      &lt;div id=&quot;cmp&quot;&gt;&lt;/div&gt;
+      &lt;p class=&quot;note&quot;&gt;Percentiles are produced by equating each board&#x27;s mark distribution for that
+      subject onto a common national scale. Distribution parameters below are illustrative, set
+      from published 2025 board outcomes; a live system would use each board&#x27;s actual anonymised
+      distributions supplied to PARAKH, anchored on a common test.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;
+  Built by Academic Group 31 as the tested prototype for HMW 2: &quot;How might we make a mark from any
+  board mean the same thing across India, without asking any state to give up its syllabus or
+  language?&quot; The board mark is never altered - one column is added, and one sentence explains it.
+&lt;/footer&gt;
+
+&lt;script&gt;
+// illustrative per-board, per-subject distribution parameters (mean, sd) out of 100
+const PARAMS={
+  RBSE:   {name:&quot;Rajasthan Board (RBSE)&quot;,    s:{Economics:[60,11.45], Mathematics:[52,13.7], Accountancy:[58,14.2]}},
+  KER:    {name:&quot;Kerala Board (SSLC / HSE)&quot;, s:{Economics:[71,10.0], Mathematics:[66,11.0], Accountancy:[70,11.0]}},
+  CBSE:   {name:&quot;Central Board (CBSE)&quot;,      s:{Economics:[66,11.0], Mathematics:[60,12.5], Accountancy:[64,12.0]}},
+  MSBSHSE:{name:&quot;Maharashtra Board (HSC)&quot;,   s:{Economics:[63,11.5], Mathematics:[56,13.0], Accountancy:[61,12.5]}}
+};
+const SUBJECTS=[&quot;Economics&quot;,&quot;Mathematics&quot;,&quot;Accountancy&quot;];
+let marks={Economics:78,Mathematics:71,Accountancy:83};
+
+function erf(x){ // Abramowitz &amp; Stegun 7.1.26
+  const s=x&lt;0?-1:1; x=Math.abs(x);
+  const a1=.254829592,a2=-.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=.3275911;
+  const t=1/(1+p*x);
+  const y=1-((((a5*t+a4)*t+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return s*y;
+}
+const phi=z=&gt;0.5*(1+erf(z/Math.SQRT2));
+function pct(board,sub,mark){
+  const [m,sd]=PARAMS[board].s[sub];
+  return Math.max(0.1,Math.min(99.9, phi((mark-m)/sd)*100));
+}
+function buildRows(){
+  document.getElementById(&quot;rows&quot;).innerHTML = SUBJECTS.map(s=&gt;
+    `&lt;div class=&quot;row&quot;&gt;&lt;div&gt;&lt;label for=&quot;m_${s}&quot;&gt;${s} - board mark (out of 100)&lt;/label&gt;
+     &lt;input type=&quot;number&quot; id=&quot;m_${s}&quot; min=&quot;0&quot; max=&quot;100&quot; value=&quot;${marks[s]}&quot;&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;&lt;/div&gt;`).join(&quot;&quot;);
+}
+function render(){
+  SUBJECTS.forEach(s=&gt;{
+    const v=parseFloat(document.getElementById(&quot;m_&quot;+s).value);
+    if(!isNaN(v)) marks[s]=Math.max(0,Math.min(100,v));
+  });
+  const b=document.getElementById(&quot;board&quot;).value;
+  const nm=document.getElementById(&quot;name&quot;).value||&quot;Candidate&quot;;
+  const rows=SUBJECTS.map(s=&gt;{
+    const p=pct(b,s,marks[s]);
+    return `&lt;tr&gt;&lt;td&gt;${s}&lt;/td&gt;&lt;td&gt;${marks[s]}&lt;/td&gt;&lt;td class=&quot;pc&quot;&gt;${p.toFixed(1)}&lt;/td&gt;&lt;/tr&gt;`;
+  }).join(&quot;&quot;);
+  const top=SUBJECTS[0], topP=pct(b,top,marks[top]);
+  document.getElementById(&quot;sheet&quot;).innerHTML=`
+    &lt;div class=&quot;top&quot;&gt;&lt;h3&gt;${PARAMS[b].name.toUpperCase()}&lt;/h3&gt;
+      &lt;p&gt;Statement of Marks &amp;nbsp;·&amp;nbsp; Class XII &amp;nbsp;·&amp;nbsp; 2027&lt;/p&gt;&lt;/div&gt;
+    &lt;div class=&quot;body&quot;&gt;
+      &lt;div class=&quot;meta&quot;&gt;
+        &lt;div&gt;&lt;div class=&quot;lbl&quot;&gt;Candidate&lt;/div&gt;&lt;div class=&quot;val&quot;&gt;${nm}&lt;/div&gt;&lt;/div&gt;
+        &lt;div&gt;&lt;div class=&quot;lbl&quot;&gt;Examining board&lt;/div&gt;&lt;div class=&quot;val&quot; style=&quot;font-size:16px&quot;&gt;${PARAMS[b].name}&lt;/div&gt;&lt;/div&gt;
+        &lt;div style=&quot;text-align:right&quot;&gt;&lt;div class=&quot;lbl&quot;&gt;Verify on DigiLocker&lt;/div&gt;
+          &lt;div class=&quot;qr&quot;&gt;&lt;i&gt;&lt;/i&gt;&lt;i class=&quot;o&quot;&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i class=&quot;o&quot;&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i class=&quot;o&quot;&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i class=&quot;o&quot;&gt;&lt;/i&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;table&gt;
+        &lt;tr&gt;&lt;th&gt;Subject&lt;/th&gt;&lt;th&gt;Board mark&lt;/th&gt;&lt;th class=&quot;pc&quot;&gt;National percentile&lt;/th&gt;&lt;/tr&gt;
+        ${rows}
+      &lt;/table&gt;
+      &lt;div class=&quot;explain&quot;&gt;
+        A percentile of &lt;b&gt;${topP.toFixed(1)}&lt;/b&gt; in ${top} means this candidate scored better than
+        &lt;b&gt;${topP.toFixed(1)}%&lt;/b&gt; of all students in India who took ${top} this year, whichever board
+        examined them.&lt;br&gt;
+        &lt;span style=&quot;color:var(--muted);font-size:14px&quot;&gt;Plain-language line added after student feedback:
+        &quot;Percentile of what? My parents will only look at the percentage.&quot;&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;`;
+  const cmp=Object.keys(PARAMS).map(k=&gt;{
+    const p=pct(k,top,marks[top]);
+    return `&lt;div class=&quot;cmprow&quot;&gt;&lt;div style=&quot;font-size:15px&quot;&gt;${PARAMS[k].name.split(&quot; (&quot;)[0]}&lt;/div&gt;
+      &lt;div class=&quot;bar&quot;&gt;&lt;span style=&quot;width:${p}%;background:${k===b?&#x27;var(--orange)&#x27;:&#x27;#AEBDD2&#x27;}&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+      &lt;div style=&quot;font-weight:700;color:${k===b?&#x27;var(--orange)&#x27;:&#x27;var(--muted)&#x27;}&quot;&gt;${p.toFixed(1)}&lt;/div&gt;&lt;/div&gt;`;
+  }).join(&quot;&quot;);
+  document.getElementById(&quot;cmp&quot;).innerHTML =
+    `&lt;p style=&quot;margin:0 0 6px;font-size:15px&quot;&gt;A board mark of &lt;b&gt;${marks[top]}&lt;/b&gt; in &lt;b&gt;${top}&lt;/b&gt;
+     becomes a different national percentile depending on who examined the candidate:&lt;/p&gt;`+cmp;
+  const ps=Object.keys(PARAMS).map(k=&gt;pct(k,top,marks[top]));
+  document.getElementById(&quot;swap&quot;).textContent =
+    `Same ${top} mark of ${marks[top]}: ${Math.min(...ps).toFixed(1)} to ${Math.max(...ps).toFixed(1)} percentile depending on board - a spread of ${(Math.max(...ps)-Math.min(...ps)).toFixed(1)} points.`;
+}
+buildRows(); render();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+  </section>
+
+</main>
+
+<script>
+  function activate(name){
+    document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+name));
+  }
+  document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>activate(b.dataset.tab)));
+  document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>activate(b.dataset.goto)));
+</script>
+
+</body>
+</html>
